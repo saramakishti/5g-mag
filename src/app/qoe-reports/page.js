@@ -6,7 +6,7 @@ import {
 } from '../mock/qoe-data';
 import LatencyChart from '@/components/QoECharts/LatencyChart';
 import BitrateChart from '@/components/QoECharts/BitrateChart';
-import QoEChart from '@/components/QoECharts/QoeChart';
+import QoEChart from '@/components/QoECharts/QoEChart';
 
 const QoEReports = () => {
   return (
