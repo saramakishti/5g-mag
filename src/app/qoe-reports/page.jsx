@@ -6,6 +6,8 @@ import { mockQoEData, mockLatencyData, mockBitrateData } from '../mock/data';
 const QoEChart = dynamic(() => import('@/components/QoECharts/QoEChart'), { ssr: false });
 const LatencyChart = dynamic(() => import('@/components/QoECharts/LatencyChart'), { ssr: false });
 const BitrateChart = dynamic(() => import('@/components/QoECharts/BitrateChart'), { ssr: false });
+const TotalChart = dynamic(() => import('@/components/QoECharts/TotalChart'), { ssr: false });
+
 
 
 const QoEReports = () => {
@@ -19,6 +21,7 @@ const QoEReports = () => {
         <LatencyChart data={mockLatencyData} />
         <BitrateChart data={mockBitrateData} />
       </div>
+      <TotalChart QoEData={mockQoEData}  latencyData={mockLatencyData} bitrateData={mockBitrateData}/>
     </div>
   );
 };
