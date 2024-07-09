@@ -4,39 +4,33 @@ export function calculateAverages(
   mockBitrateData,
   mockConsumptionData = []
 ) {
-  // TODO: fix me
-  const avgQoE = mockQoEData.reduce((acc, curr) => {
-    const timestamp = curr.timestamp;
-    if (acc[timestamp]) {
-      acc[timestamp].push(curr.playbackQuality);
-    } else {
-      acc[timestamp] = [curr.playbackQuality];
-    }
+  // loop through mockQoEData and calculate bufferingDuration and playbackQuality
+  const QoEPerTimeStamp = mockQoEData.reduce((acc, { timestamp, bufferingDuration, playbackQuality }) => {
+    acc[timestamp] = acc[timestamp] || { bufferingDuration: 0, playbackQuality: 0 };
+    acc[timestamp].bufferingDuration += bufferingDuration;
+    acc[timestamp].playbackQuality += playbackQuality;
     return acc;
   }, {});
+  const avgQoE = Object.entries(QoEPerTimeStamp).map(([timestamp, { bufferingDuration, playbackQuality }]) => ({
+    timestamp,
+    bufferingDuration: bufferingDuration / mockQoEData.length,
+    playbackQuality: playbackQuality / mockQoEData.length
+  }));
 
-  for (const key in avgQoE) {
-    avgQoE[key] = avgQoE[key].reduce((a, b) => a + b) / avgQoE[key].length;
-  }
 
   // calculate average latency
-  const avgLatency = mockLatencyData.reduce((acc, curr) => {
-    const timestamp = curr.timestamp;
-    if (acc[timestamp]) {
-      acc[timestamp].push(curr.latency);
-    } else {
-      acc[timestamp] = [curr.latency];
-    }
+  const LatencyPerTimeStamp = mockLatencyData.reduce((acc, { timestamp, latency }) => {
+    acc[timestamp] = acc[timestamp] || [];
+    acc[timestamp].push(latency);
     return acc;
   }, {});
-
-  for (const key in avgLatency) {
-    avgLatency[key] =
-      avgLatency[key].reduce((a, b) => a + b) / avgLatency[key].length;
-  }
+  const avgLatency = Object.entries(LatencyPerTimeStamp).map(([timestamp, latencies]) => ({
+    timestamp,
+    latency: latencies.reduce((a, b) => a + b) / latencies.length
+  }));
 
   // calculate average bitrate
-  const avgBitrate = mockBitrateData.reduce((acc, curr) => {
+  const BitratePerTimeStamp = mockBitrateData.reduce((acc, curr) => {
     const timestamp = curr.timestamp;
     if (acc[timestamp]) {
       acc[timestamp].push(curr.bitrate);
@@ -45,32 +39,54 @@ export function calculateAverages(
     }
     return acc;
   }, {});
-  for (const key in avgBitrate) {
-    avgBitrate[key] =
-      avgBitrate[key].reduce((a, b) => a + b) / avgBitrate[key].length;
-  }
+  const avgBitrate = Object.entries(BitratePerTimeStamp).map(([timestamp, bitrates]) => ({
+    timestamp,
+    bitrate: bitrates.reduce((a, b) => a + b) / bitrates.length
+  }));
 
-  // TODO: calculate average consumption correctly
-  // calculate average consumption
-  const avgConsumption = mockConsumptionData.reduce((acc, curr) => {
-    const timestamp = curr.timestamp;
-    if (acc[timestamp]) {
-      acc[timestamp].push(curr.playbackQuality);
-    } else {
-      acc[timestamp] = [curr.playbackQuality];
-    }
+
+  // based on viewTimestamp calculate the average viewingDuration and interactionCount, add also the userId and contentId
+  const ConsumptionPerTimeStamp = mockConsumptionData.reduce((acc, { userId, contentId, viewingDuration, interactionCount, viewTimestamp }) => {
+    acc[viewTimestamp] = acc[viewTimestamp] || [];
+    acc[viewTimestamp].push({ userId, contentId, viewingDuration, interactionCount });
     return acc;
   }, {});
+  const avgConsumptionBasedOnViewTimeStamp = Object.entries(ConsumptionPerTimeStamp).map(([viewTimestamp, consumptions]) => {
+    const avgViewingDuration = consumptions.reduce((a, b) => a + b.viewingDuration, 0) / consumptions.length;
+    const avgInteractionCount = consumptions.reduce((a, b) => a + b.interactionCount, 0) / consumptions.length;
+    return {
+      viewTimestamp,
+      userId: consumptions[0].userId,
+      contentId: consumptions[0].contentId,
+      viewingDuration: avgViewingDuration,
+      interactionCount: avgInteractionCount,
+    };
+  });
 
-  for (const key in avgConsumption) {
-    avgConsumption[key] =
-      avgConsumption[key].reduce((a, b) => a + b) / avgConsumption[key].length;
-  }
+  // base on contentId calculate the average viewingDuration and interactionCount
+  const ConsumptionPerContentId = avgConsumptionBasedOnViewTimeStamp.reduce((acc, { userId, contentId, viewingDuration, interactionCount }) => {
+    acc[contentId] = acc[contentId] || [];
+    acc[contentId].push({ userId, viewingDuration, interactionCount });
+    return acc;
+  }, {});
+  const avgConsumptionBasedOnContentId = Object.entries(ConsumptionPerContentId).map(([contentId, consumptions]) => {
+    const avgViewingDuration = consumptions.reduce((a, b) => a + b.viewingDuration, 0) / consumptions.length;
+    const avgInteractionCount = consumptions.reduce((a, b) => a + b.interactionCount, 0) / consumptions.length;
+    return {
+      contentId,
+      viewingDuration: avgViewingDuration,
+      interactionCount: avgInteractionCount,
+    };
+  });
+ 
 
   return {
-    avgQoE: mockQoEData,
-    avgLatency: mockLatencyData,
-    avgBitrate: mockBitrateData,
-    avgConsumption: avgConsumption,
+    avgQoE: avgQoE,
+    avgLatency: avgLatency,
+    avgBitrate: avgBitrate,
+    avgConsumption: {
+      avgConsumptionBasedOnViewTimeStamp,
+      avgConsumptionBasedOnContentId,
+    },
   };
 }
