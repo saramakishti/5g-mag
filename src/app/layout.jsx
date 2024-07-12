@@ -2,6 +2,7 @@ import { Inter } from 'next/font/google';
 import Link from 'next/link';
 import Image from 'next/image';
 import './globals.css';
+import NavBar from '@/components/navbar/navbar';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -27,12 +28,7 @@ export default function RootLayout({ children }) {
                 5G MAG
               </Link>
             </div>
-            <nav>
-              <Link href='/qoe-reports' className='mr-4'>
-                QoE Reports
-              </Link>
-              <Link href='/consumption-reports'>Consumption Reports</Link>
-            </nav>
+            <NavBar />
           </header>
           <main className='p-4'>{children}</main>
         </div>
