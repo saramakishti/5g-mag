@@ -1,0 +1,7 @@
+.idea
+mock-server/node_modules
+mock-server/public/content
+mock-server/public/reports
+node_modules
+public/content
+public/reports
