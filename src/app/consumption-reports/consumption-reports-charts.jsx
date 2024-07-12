@@ -1,6 +1,6 @@
 'use client';
+import dynamic from 'next/dynamic';
 import { format } from 'date-fns';
-import { CustomChart } from '@/components/custom-chart/custom-chart';
 import { ConsumptionDataMocks } from '../mock/consumption-mocks/consumption-data-mock';
 import { ChartType } from '@/utils/filter-helpers';
 import { getAverageValuesPerTimestamp, mergeDataArrays } from '@/utils/helpers';
@@ -9,7 +9,15 @@ import {
   getChartConfig,
 } from '../../utils/chart-helpers';
 
-export const ConsumptionReportsCharts = (props) => {
+// Dynamically import CustomChart  with ssr: false
+const CustomChart = dynamic(
+  () => import('@/components/custom-chart/custom-chart'),
+  {
+    ssr: false,
+  }
+);
+
+const ConsumptionReportsCharts = (props) => {
   const { chartType, dataSource } = props;
 
   // Get Interaction Count chart config based on data source
@@ -46,6 +54,8 @@ export const ConsumptionReportsCharts = (props) => {
     </div>
   );
 };
+
+export default ConsumptionReportsCharts;
 
 const TotalConsumptionChart = (props) => {
   const { consumptionData } = props;

@@ -1,6 +1,6 @@
 'use client';
+import dynamic from 'next/dynamic';
 import { format } from 'date-fns';
-import { CustomChart } from '@/components/custom-chart/custom-chart';
 import { ChartType } from '../../utils/filter-helpers';
 import { getChartConfig, QoEChartTypes } from '../../utils/chart-helpers';
 import { getAverageValuesPerTimestamp, mergeDataArrays } from '@/utils/helpers';
@@ -8,7 +8,15 @@ import { BitrateDataMocks } from '../mock/qoe-mocks/bitrate-data-mock';
 import { LatencyDataMocks } from '../mock/qoe-mocks/latency-data-mock';
 import { QoEDataMocks } from '../mock/qoe-mocks/qoe-data-mock';
 
-export const QoEReportsCharts = (props) => {
+// Dynamically import CustomChart  with ssr: false
+const CustomChart = dynamic(
+  () => import('@/components/custom-chart/custom-chart'),
+  {
+    ssr: false,
+  }
+);
+
+const QoEReportsCharts = (props) => {
   const { chartType, dataSource } = props;
 
   // Get QoE chart config based on data source
@@ -44,6 +52,8 @@ export const QoEReportsCharts = (props) => {
     </div>
   );
 };
+
+export default QoEReportsCharts;
 
 const TotalQoEChart = (props) => {
   const { qoeData, bitrateData, latencyData } = props;

@@ -1,7 +1,7 @@
 import Chart from 'react-apexcharts';
 
 // This is just a wrapper for the ApexCharts component
-export const CustomChart = (props) => {
+const CustomChart = (props) => {
   const { chartConfig, chartType = 'line' } = props;
   const { series, categories, title } = chartConfig;
 
@@ -23,3 +23,4 @@ export const CustomChart = (props) => {
     </div>
   );
 };
+export default CustomChart;
