@@ -1,5 +1,6 @@
 'use client';
 import React, { useState } from 'react';
+import dynamic from 'next/dynamic';
 import {
   ChartType,
   ChartTypeOptions,
@@ -7,7 +8,13 @@ import {
   DataSourceOptions,
 } from '../../utils/filter-helpers';
 import { Select } from '@/components/select/select';
-import { ConsumptionReportsCharts } from './consumption-reports-charts';
+// Dynamically import ConsumptionReportsCharts with ssr: false
+const ConsumptionReportsCharts = dynamic(
+  () => import('./consumption-reports-charts'),
+  {
+    ssr: false,
+  }
+);
 
 const ConsumptionReports = () => {
   const [chartType, setChartType] = useState(ChartType.individual); //set initial state for chart type filter

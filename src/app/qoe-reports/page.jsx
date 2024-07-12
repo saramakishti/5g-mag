@@ -1,5 +1,6 @@
 'use client';
 import React, { useState } from 'react';
+import dynamic from 'next/dynamic';
 import { Select } from '@/components/select/select';
 import {
   ChartType,
@@ -7,7 +8,10 @@ import {
   DataSource,
   DataSourceOptions,
 } from '../../utils/filter-helpers';
-import { QoEReportsCharts } from './qoe-reports-charts';
+// Dynamically import QoEReportsCharts with ssr: false
+const QoEReportsCharts = dynamic(() => import('./qoe-reports-charts'), {
+  ssr: false,
+});
 
 const QoEReports = () => {
   const [chartType, setChartType] = useState(ChartType.individual); //set initial state for chart type filter
