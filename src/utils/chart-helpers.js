@@ -29,7 +29,7 @@ export const getChartConfig = (data, type) => {
     qoe: {
       seriesKeys: [
         { label: 'Buffering Duration (ms)', dataKey: 'bufferingDuration' },
-        { label: 'Playback Quality', dataKey: 'playbackQuality' },
+        { label: 'Playback Quality (kbit/s)', dataKey: 'playbackQuality' },
       ],
       chartTitle: 'QoE Over Time',
       categoryKey: 'timestamp',

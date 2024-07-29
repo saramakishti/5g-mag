@@ -1,4 +1,5 @@
 export const ConsumptionDataMocks = {
+  //JSON 
   mock1: [
     {
       userId: 'user1',

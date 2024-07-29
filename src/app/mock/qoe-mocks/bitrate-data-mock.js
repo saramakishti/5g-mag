@@ -1,4 +1,5 @@
 export const BitrateDataMocks = {
+  //XML
   mock1: [
     {
       timestamp: '2024-05-01T14:00:00Z',

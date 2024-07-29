@@ -23,10 +23,10 @@ const DataSource = {
 };
 
 const DataSourceOptions = [
-  { key: 'mock1', value: 'Sample Data 1' },
-  { key: 'mock2', value: 'Sample Data 2' },
-  { key: 'mock3', value: 'Sample Data 3' },
-  { key: 'mock4', value: 'Sample Data 4' },
+  { key: DataSource.mock1, value: 'Sample Data 1' },
+  { key: DataSource.mock2, value: 'Sample Data 2' },
+  { key: DataSource.mock3, value: 'Sample Data 3' },
+  { key: DataSource.mock4, value: 'Sample Data 4' },
 ];
 
 export { ChartType, ChartTypeOptions, DataSource, DataSourceOptions };
